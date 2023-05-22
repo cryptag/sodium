@@ -22,14 +22,18 @@ const (
 	SecretStreamTag_Message = iota
 	// message boundary, the last chunk of message
 	SecretStreamTag_Sync
+	// more messages will follow; this is not the last message
+	SecretStreamTag_Push
 	// explicity rekeying
 	SecretStreamTag_Rekey
 )
 
 func (tag *SecretStreamTag) fromCtag(ctag C.uchar) {
 	switch ctag {
-	case C.crypto_secretstream_xchacha20poly1305_tag_push():
+	case C.crypto_secretstream_xchacha20poly1305_tag_final():
 		*tag = SecretStreamTag_Sync
+	case C.crypto_secretstream_xchacha20poly1305_tag_push():
+		*tag = SecretStreamTag_Push
 	case C.crypto_secretstream_xchacha20poly1305_tag_rekey():
 		*tag = SecretStreamTag_Rekey
 	default:
@@ -41,6 +45,8 @@ func (tag *SecretStreamTag) fromCtag(ctag C.uchar) {
 func (tag SecretStreamTag) toCtag() (ctag C.uchar) {
 	switch tag {
 	case SecretStreamTag_Sync:
+		ctag = C.crypto_secretstream_xchacha20poly1305_tag_final()
+	case SecretStreamTag_Push:
 		ctag = C.crypto_secretstream_xchacha20poly1305_tag_push()
 	case SecretStreamTag_Rekey:
 		ctag = C.crypto_secretstream_xchacha20poly1305_tag_rekey()
