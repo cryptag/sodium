@@ -7,14 +7,14 @@ import "unsafe"
 // #include <sodium.h>
 import "C"
 
-//MemZero sets the buffer to zero
+// MemZero sets the buffer to zero
 func MemZero(buff1 Bytes) {
 	if len(buff1) > 0 {
 		C.sodium_memzero(unsafe.Pointer(&buff1[0]), C.size_t(len(buff1)))
 	}
 }
 
-//MemCmp compare to buffer without leaking timing infomation
+// MemCmp compare to buffer without leaking timing infomation
 func MemCmp(buff1, buff2 Bytes, length int) int {
 	if length > buff1.Length() || length > buff2.Length() {
 		panic(fmt.Sprintf("Attempt to compare more bytes (%d) than provided "+

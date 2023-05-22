@@ -32,7 +32,7 @@ func (AEADCPKey) Size() int {
 }
 
 func MakeAEADCPKey() AEADCPKey {
-	b := make([]byte, cryptoAEADChaCha20Poly1305IETFKeyBytes);
+	b := make([]byte, cryptoAEADChaCha20Poly1305IETFKeyBytes)
 	C.crypto_aead_chacha20poly1305_ietf_keygen((*C.uchar)(&b[0]))
 	return AEADCPKey{b}
 }
@@ -45,9 +45,9 @@ func (AEADCPMAC) Size() int {
 	return cryptoAEADChaCha20Poly1305IETFABytes
 }
 
-//AEADCPEncrypt encrypts message with AEADCPKey, and AEADCPNonce.
-//Message then authenticated with additional data 'ad'.
-//Authentication tag is append to the encrypted data.
+// AEADCPEncrypt encrypts message with AEADCPKey, and AEADCPNonce.
+// Message then authenticated with additional data 'ad'.
+// Authentication tag is append to the encrypted data.
 func (b Bytes) AEADCPEncrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -77,10 +77,10 @@ func (b Bytes) AEADCPEncrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes) {
 	return
 }
 
-//AEADCPDecrypt decrypts message with AEADCPKey, and AEADCPNonce.
-//The appended authenticated tag is verified with additional data 'ad' before decryption.
+// AEADCPDecrypt decrypts message with AEADCPKey, and AEADCPNonce.
+// The appended authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADCPDecrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err error) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -107,9 +107,9 @@ func (b Bytes) AEADCPDecrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err
 	return
 }
 
-//AEADCPEncryptDetached encrypts message with AEADCPKey, and AEADCPNonce.
-//Message then authenticated with additional data 'ad'.
-//Authentication tag is separated saved as 'mac'.
+// AEADCPEncryptDetached encrypts message with AEADCPKey, and AEADCPNonce.
+// Message then authenticated with additional data 'ad'.
+// Authentication tag is separated saved as 'mac'.
 func (b Bytes) AEADCPEncryptDetached(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes, mac AEADCPMAC) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -140,10 +140,10 @@ func (b Bytes) AEADCPEncryptDetached(ad Bytes, n AEADCPNonce, k AEADCPKey) (c By
 	return
 }
 
-//AEADCPDecryptDetached decrypts message with AEADCPKey, and AEADCPNonce.
-//The separated authenticated tag is verified with additional data 'ad' before decryption.
+// AEADCPDecryptDetached decrypts message with AEADCPKey, and AEADCPNonce.
+// The separated authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADCPDecryptDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err error) {
 	checkTypedSize(&mac, "public mac")
 	checkTypedSize(&n, "public nonce")
@@ -168,10 +168,10 @@ func (b Bytes) AEADCPDecryptDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k A
 	return
 }
 
-//AEADCPVerify decrypts message with AEADCPKey, and AEADCPNonce without writing decrypted data.
-//The appended authenticated tag is verified with additional data 'ad' before decryption.
+// AEADCPVerify decrypts message with AEADCPKey, and AEADCPNonce without writing decrypted data.
+// The appended authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADCPVerify(ad Bytes, n AEADCPNonce, k AEADCPKey) (err error) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -194,10 +194,10 @@ func (b Bytes) AEADCPVerify(ad Bytes, n AEADCPNonce, k AEADCPKey) (err error) {
 	return
 }
 
-//AEADCPVerifyDetached decrypts message with AEADCPKey, and AEADCPNonce without writing decrypted data.
-//The separated authenticated tag is verified with additional data 'ad' before decryption.
+// AEADCPVerifyDetached decrypts message with AEADCPKey, and AEADCPNonce without writing decrypted data.
+// The separated authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADCPVerifyDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AEADCPKey) (err error) {
 	checkTypedSize(&mac, "public mac")
 	checkTypedSize(&n, "public nonce")
@@ -220,4 +220,3 @@ func (b Bytes) AEADCPVerifyDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AE
 	}
 	return
 }
-

@@ -35,7 +35,7 @@ func (k BoxSecretKey) Size() int {
 	return cryptoBoxSecretKeyBytes
 }
 
-//PublicKey calculates public key from BoxSecretKey.
+// PublicKey calculates public key from BoxSecretKey.
 func (k BoxSecretKey) PublicKey() BoxPublicKey {
 	checkTypedSize(&k, "SecretKey")
 
@@ -70,7 +70,7 @@ func (b BoxMAC) Size() int {
 	return cryptoBoxMacBytes
 }
 
-//MakeBoxKP generates a keypair for Box
+// MakeBoxKP generates a keypair for Box
 func MakeBoxKP() BoxKP {
 	pkb := make([]byte, cryptoBoxPublicKeyBytes)
 	skb := make([]byte, cryptoBoxSecretKeyBytes)
@@ -86,9 +86,9 @@ func MakeBoxKP() BoxKP {
 	}
 }
 
-//SeedBoxKP generates a keypair for signing from a BoxSeed.
+// SeedBoxKP generates a keypair for signing from a BoxSeed.
 //
-//The same pair of keys will be generated with the same 'seed'
+// The same pair of keys will be generated with the same 'seed'
 func SeedBoxKP(seed BoxSeed) BoxKP {
 	checkTypedSize(&seed, "seed")
 	pkb := make([]byte, cryptoBoxPublicKeyBytes)
@@ -106,12 +106,12 @@ func SeedBoxKP(seed BoxSeed) BoxKP {
 	}
 }
 
-//SealedBox puts message into a sealed box using receiver's PublicKey and an
-//ephemeral key pair of which the SecretKey is destroyed on sender's side
-//right after encryption, and the PublicKey is packed with the Box to the
-//receiver.
+// SealedBox puts message into a sealed box using receiver's PublicKey and an
+// ephemeral key pair of which the SecretKey is destroyed on sender's side
+// right after encryption, and the PublicKey is packed with the Box to the
+// receiver.
 //
-//The receiver can open the box but can not verify the identity of the sender.
+// The receiver can open the box but can not verify the identity of the sender.
 func (b Bytes) SealedBox(pk BoxPublicKey) (cm Bytes) {
 	checkTypedSize(&pk, "PublicKey")
 	bp, bl := plen(b)
@@ -127,10 +127,10 @@ func (b Bytes) SealedBox(pk BoxPublicKey) (cm Bytes) {
 	return
 }
 
-//SealedBoxOpen reads message from a sealed box using its key pair and ephemeral
-//public packed in the Box.
+// SealedBoxOpen reads message from a sealed box using its key pair and ephemeral
+// public packed in the Box.
 //
-//It returns an error if opening failed.
+// It returns an error if opening failed.
 func (b Bytes) SealedBoxOpen(kp BoxKP) (m Bytes, err error) {
 	checkTypedSize(&kp.PublicKey, "receiver's PublicKey")
 	checkTypedSize(&kp.SecretKey, "receiver's SecretKey")
@@ -149,9 +149,9 @@ func (b Bytes) SealedBoxOpen(kp BoxKP) (m Bytes, err error) {
 	return
 }
 
-//Box puts message into an authenticated encrypted box using sender's SecretKey
-//and receiver's PublicKey, with a shared one-time nonce is used for each
-//message.
+// Box puts message into an authenticated encrypted box using sender's SecretKey
+// and receiver's PublicKey, with a shared one-time nonce is used for each
+// message.
 func (b Bytes) Box(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (c Bytes) {
 	checkTypedSize(&n, "nonce")
 	checkTypedSize(&pk, "receiver's public key")
@@ -171,10 +171,10 @@ func (b Bytes) Box(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (c Bytes) {
 	return
 }
 
-//BoxOpen reads message from an authenticated encrypted box using receiver's
-//SecretKey and sender's PublicKey with a shared one-time nonce
+// BoxOpen reads message from an authenticated encrypted box using receiver's
+// SecretKey and sender's PublicKey with a shared one-time nonce
 //
-//It returns an error if opening failed.
+// It returns an error if opening failed.
 func (b Bytes) BoxOpen(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (m Bytes, err error) {
 	checkTypedSize(&n, "nonce")
 	checkTypedSize(&pk, "receiver's public key")
@@ -195,11 +195,11 @@ func (b Bytes) BoxOpen(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (m Bytes, e
 	return
 }
 
-//BoxDetached encodes message into an encrypted message using sender's SecretKey
-//and receiver's PublicKey, with a shared one-time nonce is used for each
-//message.
+// BoxDetached encodes message into an encrypted message using sender's SecretKey
+// and receiver's PublicKey, with a shared one-time nonce is used for each
+// message.
 //
-//Detached MAC is return along with encrypted message for authentication.
+// Detached MAC is return along with encrypted message for authentication.
 func (b Bytes) BoxDetached(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (mac BoxMAC, c Bytes) {
 	checkTypedSize(&n, "nonce")
 	checkTypedSize(&pk, "receiver's public key")
@@ -222,11 +222,11 @@ func (b Bytes) BoxDetached(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (mac Bo
 	return BoxMAC{macb}, c
 }
 
-//BoxOpenDetached decodes message from an encrypted message along with a MAC for
-//authentication, and using receiver's SecretKey and sender's PublicKey with
+// BoxOpenDetached decodes message from an encrypted message along with a MAC for
+// authentication, and using receiver's SecretKey and sender's PublicKey with
 // a shared one-time nonce.
 //
-//It returns an error if opening failed.
+// It returns an error if opening failed.
 func (b Bytes) BoxOpenDetached(mac BoxMAC, n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (m Bytes, err error) {
 	checkTypedSize(&mac, "MAC")
 	checkTypedSize(&n, "nonce")

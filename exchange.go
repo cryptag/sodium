@@ -17,7 +17,7 @@ type KXKP struct {
 	SecretKey KXSecretKey
 }
 
-//MakeKXKP generates a keypair for signing
+// MakeKXKP generates a keypair for signing
 func MakeKXKP() KXKP {
 	pkb := make([]byte, cryptoKXPublicKeyBytes)
 	skb := make([]byte, cryptoKXSecretKeyBytes)
@@ -33,9 +33,9 @@ func MakeKXKP() KXKP {
 	}
 }
 
-//SeedKXKP generates a keypair for exchanging from a KXSeed.
+// SeedKXKP generates a keypair for exchanging from a KXSeed.
 //
-//The same pair of keys will be generated with the same 'seed'
+// The same pair of keys will be generated with the same 'seed'
 func SeedKXKP(seed KXSeed) KXKP {
 	checkTypedSize(&seed, "seed")
 	pkb := make([]byte, cryptoKXPublicKeyBytes)

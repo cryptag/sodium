@@ -427,7 +427,7 @@ func ExampleMakeKXKP() {
 
 func ExampleSecretStreamXCPEncoder_Header() {
 	key := MakeSecretStreamXCPKey()
-	var buf bytes.Buffer 
+	var buf bytes.Buffer
 	encoder := MakeSecretStreamXCPEncoder(key, &buf)
 	b := encoder.Header().Bytes
 	fmt.Println(b.Length())
@@ -436,7 +436,7 @@ func ExampleSecretStreamXCPEncoder_Header() {
 
 func ExampleSecretStreamXCPEncoder_Write() {
 	key := MakeSecretStreamXCPKey()
-	var buf bytes.Buffer 
+	var buf bytes.Buffer
 	encoder := MakeSecretStreamXCPEncoder(key, &buf)
 	encoder.SetTag(SecretStreamTag_Sync)
 	encoder.Write([]byte("test"))
@@ -447,7 +447,7 @@ func ExampleSecretStreamXCPEncoder_Write() {
 
 func ExampleSecretStreamXCPEncoder_WriteAndClose() {
 	key := MakeSecretStreamXCPKey()
-	var buf bytes.Buffer 
+	var buf bytes.Buffer
 	encoder := MakeSecretStreamXCPEncoder(key, &buf)
 	encoder.SetTag(SecretStreamTag_Sync)
 	encoder.WriteAndClose([]byte("test"))
@@ -457,7 +457,7 @@ func ExampleSecretStreamXCPEncoder_WriteAndClose() {
 
 func ExampleSecretStreamXCPDecoder_Read() {
 	key := MakeSecretStreamXCPKey()
-	var buf bytes.Buffer 
+	var buf bytes.Buffer
 	encoder := MakeSecretStreamXCPEncoder(key, &buf)
 	encoder.SetTag(SecretStreamTag_Rekey)
 	encoder.Write([]byte("test"))
@@ -472,12 +472,12 @@ func ExampleSecretStreamXCPDecoder_Read() {
 		var n int
 		n, err = decoder.Read(chunk)
 		fmt.Println(n)
-		if (n > 0) {
+		if n > 0 {
 			fmt.Println(string(chunk))
 			fmt.Println(decoder.Tag() == SecretStreamTag_Rekey)
 		} else {
 			fmt.Println(err == io.EOF)
-			break;
+			break
 		}
 	}
 	//Output: true

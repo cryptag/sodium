@@ -39,7 +39,7 @@ func (s SecretBoxMAC) Size() int {
 	return cryptoSecretBoxMacBytes
 }
 
-//SecretBox use a SecretBoxNonce and a SecretBoxKey to encrypt a message.
+// SecretBox use a SecretBoxNonce and a SecretBoxKey to encrypt a message.
 func (b Bytes) SecretBox(n SecretBoxNonce, k SecretBoxKey) (c Bytes) {
 	checkTypedSize(&n, "nonce")
 	checkTypedSize(&k, "secret key")
@@ -58,9 +58,9 @@ func (b Bytes) SecretBox(n SecretBoxNonce, k SecretBoxKey) (c Bytes) {
 	return
 }
 
-//SecretBoxOpen opens a SecretBox using SecretBoxKey and SecretBoxNonce.
+// SecretBoxOpen opens a SecretBox using SecretBoxKey and SecretBoxNonce.
 //
-//It returns an error if opening failed.
+// It returns an error if opening failed.
 func (b Bytes) SecretBoxOpen(n SecretBoxNonce, k SecretBoxKey) (m Bytes, err error) {
 	checkTypedSize(&n, "nonce")
 	checkTypedSize(&k, "secret key")
@@ -79,8 +79,8 @@ func (b Bytes) SecretBoxOpen(n SecretBoxNonce, k SecretBoxKey) (m Bytes, err err
 	return
 }
 
-//SecretBoxDetached use a SecretBoxNonce and a SecretBoxKey to encrypt a message.
-//A separate MAC is returned.
+// SecretBoxDetached use a SecretBoxNonce and a SecretBoxKey to encrypt a message.
+// A separate MAC is returned.
 func (b Bytes) SecretBoxDetached(n SecretBoxNonce, k SecretBoxKey) (c Bytes, mac SecretBoxMAC) {
 	checkTypedSize(&n, "nonce")
 	checkTypedSize(&k, "secret key")
@@ -102,10 +102,10 @@ func (b Bytes) SecretBoxDetached(n SecretBoxNonce, k SecretBoxKey) (c Bytes, mac
 	return
 }
 
-//SecretBoxOpenDetached opens a SecretBox using SecretBoxKey and SecretBoxNonce.
-//with a separate MAC.
+// SecretBoxOpenDetached opens a SecretBox using SecretBoxKey and SecretBoxNonce.
+// with a separate MAC.
 //
-//It returns an error if opening failed.
+// It returns an error if opening failed.
 func (b Bytes) SecretBoxOpenDetached(mac SecretBoxMAC, n SecretBoxNonce, k SecretBoxKey) (m Bytes, err error) {
 	checkTypedSize(&mac, "mac")
 	checkTypedSize(&n, "nonce")

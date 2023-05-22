@@ -19,9 +19,9 @@ var (
 	cryptoGenericHashPrimitive   = C.GoString(C.crypto_generichash_primitive())
 )
 
-//GenericHash provides a BLAKE2b (RFC7693) hash, in interface of hash.Hash.
+// GenericHash provides a BLAKE2b (RFC7693) hash, in interface of hash.Hash.
 //
-//The Hash's and key's size can be any between 16 bytes (128 bits) to
+// The Hash's and key's size can be any between 16 bytes (128 bits) to
 // 64 bytes (512 bits) based on different application.
 type GenericHash struct {
 	size      int
@@ -39,17 +39,17 @@ func (GenericHashKey) Size() int {
 	return cryptoGenericHashKeyBytes
 }
 
-//Unkeyed version with default output length.
+// Unkeyed version with default output length.
 func NewGenericHashDefault() hash.Hash {
 	return NewGenericHash(cryptoGenericHashBytes)
 }
 
-//Keyed version with default output length.
+// Keyed version with default output length.
 func NewGenericHashDefaultKeyed(key GenericHashKey) hash.Hash {
 	return NewGenericHashKeyed(cryptoGenericHashBytes, key)
 }
 
-//Unkeyed version, output length should between 16 (128-bit) to 64 (512-bit).
+// Unkeyed version, output length should between 16 (128-bit) to 64 (512-bit).
 func NewGenericHash(outlen int) hash.Hash {
 	checkSizeInRange(outlen, cryptoGenericHashBytesMin, cryptoGenericHashBytesMax, "out")
 	hash := GenericHash{
@@ -63,7 +63,7 @@ func NewGenericHash(outlen int) hash.Hash {
 	return &hash
 }
 
-//Keyed version, output length in bytes should between 16 (128-bit) to 64 (512-bit).
+// Keyed version, output length in bytes should between 16 (128-bit) to 64 (512-bit).
 func NewGenericHashKeyed(outlen int, key GenericHashKey) hash.Hash {
 	checkSizeInRange(outlen, cryptoGenericHashBytesMin, cryptoGenericHashBytesMax, "out")
 	checkTypedSize(&key, "generic hash key")
@@ -78,19 +78,19 @@ func NewGenericHashKeyed(outlen int, key GenericHashKey) hash.Hash {
 	return &hash
 }
 
-//Output length in bytes.
+// Output length in bytes.
 //
-//Implements hash.Hash
+// Implements hash.Hash
 func (g GenericHash) Size() int {
 	return g.size
 }
 
-//Implements hash.Hash
+// Implements hash.Hash
 func (g GenericHash) BlockSize() int {
 	return g.blocksize
 }
 
-//Implements hash.Hash
+// Implements hash.Hash
 func (g *GenericHash) Reset() {
 	if g.sum != nil {
 		g.sum = nil
@@ -114,9 +114,9 @@ func (g *GenericHash) Reset() {
 	}
 }
 
-//Use GenericHash.Write([]byte) to hash chunks of message.
+// Use GenericHash.Write([]byte) to hash chunks of message.
 //
-//Implements hash.Hash
+// Implements hash.Hash
 func (g *GenericHash) Write(p []byte) (n int, err error) {
 	if g.sum != nil {
 		return 0, fmt.Errorf("hash finalized")
@@ -144,11 +144,11 @@ func (g *GenericHash) Write(p []byte) (n int, err error) {
 	return len(p), nil
 }
 
-//Return appended the Sum after b.
+// Return appended the Sum after b.
 //
-//Implements hash.Hash.
+// Implements hash.Hash.
 //
-//NOTE: Repeated call is allowed. But can't call Write() after Sum().
+// NOTE: Repeated call is allowed. But can't call Write() after Sum().
 // The underlying state is freed. It MUST be Reset() to use it again after calling Sum().
 // This behaviour is inconsistent with the definition of hash.Hash.
 func (g *GenericHash) Sum(b []byte) []byte {

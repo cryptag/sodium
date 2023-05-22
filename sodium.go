@@ -1,206 +1,206 @@
-//Package sodium is a wrapper for https://github.com/jedisct1/libsodium
+// Package sodium is a wrapper for https://github.com/jedisct1/libsodium
 //
-//Most of the functions is a method to the "Bytes" type.
-//They are grouped below:
+// Most of the functions is a method to the "Bytes" type.
+// They are grouped below:
 //
-//Signature
+// # Signature
 //
-//Sender sign a message with its SecretKey and the receiver can verify the
-//Signature by sender's PublicKey
+// Sender sign a message with its SecretKey and the receiver can verify the
+// Signature by sender's PublicKey
 //
-//    type SignKP struct {
-//        PublicKey SignPublicKey
-//        SecretKey SignSecretKey
-//    }
-//    func MakeSignKP() SignKP
-//    func SeedSignKP(seed SignSeed) SignKP
-//    func (k SignSecretKey) PublicKey() SignPublicKey
-//    func (k SignSecretKey) Seed() SignSeed
+//	type SignKP struct {
+//	    PublicKey SignPublicKey
+//	    SecretKey SignSecretKey
+//	}
+//	func MakeSignKP() SignKP
+//	func SeedSignKP(seed SignSeed) SignKP
+//	func (k SignSecretKey) PublicKey() SignPublicKey
+//	func (k SignSecretKey) Seed() SignSeed
 //
-//    //SignKP can be converted to BoxKP
-//    //It is recommended to use separate keys for signing and encrytion.
-//    func (p SignKP) ToBox() BoxKP
-//    func (k SignSecretKey) ToBox() BoxSecretKey
-//    func (k SignPublicKey) ToBox() BoxPublicKey
+//	//SignKP can be converted to BoxKP
+//	//It is recommended to use separate keys for signing and encrytion.
+//	func (p SignKP) ToBox() BoxKP
+//	func (k SignSecretKey) ToBox() BoxSecretKey
+//	func (k SignPublicKey) ToBox() BoxPublicKey
 //
-//    //Message + Signature
-//    func (b Bytes) Sign(key SignSecretKey) (sm Bytes)
-//    func (b Bytes) SignOpen(key SignPublicKey) (m Bytes, err error)
+//	//Message + Signature
+//	func (b Bytes) Sign(key SignSecretKey) (sm Bytes)
+//	func (b Bytes) SignOpen(key SignPublicKey) (m Bytes, err error)
 //
-//    //Detached Signature
-//    func (b Bytes) SignDetached(key SignSecretKey) (sig Signature)
-//    func (b Bytes) SignVerifyDetached(sig Signature, key SignPublicKey) (err error)
+//	//Detached Signature
+//	func (b Bytes) SignDetached(key SignSecretKey) (sig Signature)
+//	func (b Bytes) SignVerifyDetached(sig Signature, key SignPublicKey) (err error)
 //
-//(Ed25519)
+// (Ed25519)
 //
-//    //for multi-part messages that can't fit in memory
-//    func NewSignState() *SignState
-//    func (s *SignState) Update(b []byte)
-//    func (s *SignState) Sign(key SignSecretKey) Signature
-//    func (s *SignState) Verify(sig Signature, key SignPublicKey) (err error)
+//	//for multi-part messages that can't fit in memory
+//	func NewSignState() *SignState
+//	func (s *SignState) Update(b []byte)
+//	func (s *SignState) Sign(key SignSecretKey) Signature
+//	func (s *SignState) Verify(sig Signature, key SignPublicKey) (err error)
 //
-//(Ed25519ph)
+// (Ed25519ph)
 //
-//Anonymous Public Key Encryption
+// # Anonymous Public Key Encryption
 //
-//An anonymous can encrypt a message with an ephemeral key pair and reveiver's
-//PublicKey. The receiver can decrypt the message with its SecretKey. Only the
-//receiver is authenticated.
+// An anonymous can encrypt a message with an ephemeral key pair and reveiver's
+// PublicKey. The receiver can decrypt the message with its SecretKey. Only the
+// receiver is authenticated.
 //
+//	type BoxKP struct {
+//	    PublicKey BoxPublicKey
+//	    SecretKey BoxSecretKey
+//	}
+//	func MakeBoxKP() BoxKP
+//	func SeedBoxKP(seed BoxSeed) BoxKP
 //
-//    type BoxKP struct {
-//        PublicKey BoxPublicKey
-//        SecretKey BoxSecretKey
-//    }
-//    func MakeBoxKP() BoxKP
-//    func SeedBoxKP(seed BoxSeed) BoxKP
+//	func (b Bytes) SealedBox(pk BoxPublicKey) (cm Bytes)
+//	func (b Bytes) SealedBoxOpen(kp BoxKP) (m Bytes, err error)
 //
-//    func (b Bytes) SealedBox(pk BoxPublicKey) (cm Bytes)
-//    func (b Bytes) SealedBoxOpen(kp BoxKP) (m Bytes, err error)
+// (X25519-XSalsa20-Poly1305)
 //
-//(X25519-XSalsa20-Poly1305)
+// # Authenticated Public Key Encryption
 //
-//Authenticated Public Key Encryption
+// Authenticated Box can be used to pass encrypt message from a known sender to a known receiver.
+// The sender and the receiver are both authenticated to each other.
 //
-//Authenticated Box can be used to pass encrypt message from a known sender to a known receiver.
-//The sender and the receiver are both authenticated to each other.
+// A one-time shared nonce is also generated and passed to protect the key pairs and messages.
 //
-//A one-time shared nonce is also generated and passed to protect the key pairs and messages.
+//	type BoxKP struct {
+//	    PublicKey BoxPublicKey
+//	    SecretKey BoxSecretKey
+//	}
+//	func MakeBoxKP() BoxKP
+//	func SeedBoxKP(seed BoxSeed) BoxKP
 //
-//    type BoxKP struct {
-//        PublicKey BoxPublicKey
-//        SecretKey BoxSecretKey
-//    }
-//    func MakeBoxKP() BoxKP
-//    func SeedBoxKP(seed BoxSeed) BoxKP
+//	func (b *BoxNonce) Next()
 //
-//    func (b *BoxNonce) Next()
+//	//All-in-one box
+//	func (b Bytes) Box(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (c Bytes)
+//	func (b Bytes) BoxOpen(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (m Bytes, err error)
 //
-//    //All-in-one box
-//    func (b Bytes) Box(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (c Bytes)
-//    func (b Bytes) BoxOpen(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (m Bytes, err error)
+//	//Detached MAC
+//	func (b Bytes) BoxDetached(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (mac BoxMAC, c Bytes)
+//	func (b Bytes) BoxOpenDetached(mac BoxMAC, n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (c Bytes, err error)
 //
-//    //Detached MAC
-//    func (b Bytes) BoxDetached(n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (mac BoxMAC, c Bytes)
-//    func (b Bytes) BoxOpenDetached(mac BoxMAC, n BoxNonce, pk BoxPublicKey, sk BoxSecretKey) (c Bytes, err error)
+// (X25519-XSalsa20-Poly1305)
 //
-//(X25519-XSalsa20-Poly1305)
+// # Key Exchanging
 //
-//Key Exchanging
+// Server and Client exchange their public key and calculates a common session key with their own
+// secret key.
 //
-//Server and Client exchange their public key and calculates a common session key with their own
-//secret key.
+//	type KXKP struct {
+//	    PublicKey KXPublicKey
+//	    SecretKey KXSecretKey
+//	}
+//	func MakeKXKP() KXKP
+//	func SeedKXKP(seed KXSeed) KXKP
 //
-//    type KXKP struct {
-//        PublicKey KXPublicKey
-//        SecretKey KXSecretKey
-//    }
-//    func MakeKXKP() KXKP
-//    func SeedKXKP(seed KXSeed) KXKP
+//	type KXSessionKeys struct {
+//	    Rx KXSessionKey
+//	    Tx KXSessionKey
+//	}
 //
-//    type KXSessionKeys struct {
-//        Rx KXSessionKey
-//        Tx KXSessionKey
-//    }
+//	// session keys for client
+//	func (kp KXKP) ClientSessionKeys(server_pk KXPublicKey) (*KXSessionKeys, error)
 //
-//    // session keys for client
-//    func (kp KXKP) ClientSessionKeys(server_pk KXPublicKey) (*KXSessionKeys, error)
+//	// session keys for server
+//	func (kp KXKP) ServerSessionKeys(client_pk KXPublicKey) (*KXSessionKeys, error) {
+//	// client's rx == server's tx
+//	// client's tx == server's rx
 //
-//    // session keys for server
-//    func (kp KXKP) ServerSessionKeys(client_pk KXPublicKey) (*KXSessionKeys, error) {
-//    // client's rx == server's tx
-//    // client's tx == server's rx
+// (rx || tx = BLAKE2B-512(p.n || client_pk || server_pk))
 //
-//(rx || tx = BLAKE2B-512(p.n || client_pk || server_pk))
+// # Secret Key Authentication
 //
-//Secret Key Authentication
+// One holder of a secret key authenticates the message with MAC.
 //
-//One holder of a secret key authenticates the message with MAC.
+//	//Holders of the key can generate a MAC for the message.
+//	func (b Bytes) Auth(key MACKey) (mac MAC)
+//	//Holders of the key can verify the message's authenticity.
+//	func (b Bytes) AuthVerify(mac MAC, key MACKey) (err error)
 //
-//    //Holders of the key can generate a MAC for the message.
-//    func (b Bytes) Auth(key MACKey) (mac MAC)
-//    //Holders of the key can verify the message's authenticity.
-//    func (b Bytes) AuthVerify(mac MAC, key MACKey) (err error)
+// (HMAC-SHA512256)
 //
-//(HMAC-SHA512256)
+// # Secret Key Encryption
 //
-//Secret Key Encryption
+// Use a secret key and a nonce to protect the key, messages could be encrypted
+// into a SecretBox. The encrypted data's intergrity is checked when decryption.
 //
-//Use a secret key and a nonce to protect the key, messages could be encrypted
-//into a SecretBox. The encrypted data's intergrity is checked when decryption.
+//	func (n *SecretBoxNonce) Next()
 //
-//    func (n *SecretBoxNonce) Next()
+//	//encrypted message + MAC.
+//	func (b Bytes) SecretBox(n SecretBoxNonce, k SecretBoxKey) (c Bytes)
+//	func (b Bytes) SecretBoxOpen(n SecretBoxNonce, k SecretBoxKey) (m Bytes, err error)
 //
-//    //encrypted message + MAC.
-//    func (b Bytes) SecretBox(n SecretBoxNonce, k SecretBoxKey) (c Bytes)
-//    func (b Bytes) SecretBoxOpen(n SecretBoxNonce, k SecretBoxKey) (m Bytes, err error)
+//	//Detached version has a separate MAC.
+//	func (b Bytes) SecretBoxDetached(n SecretBoxNonce, k SecretBoxKey) (c Bytes, mac SecretBoxMAC)
+//	func (b Bytes) SecretBoxOpenDetached(mac SecretBoxMAC, n SecretBoxNonce, k SecretBoxKey) (m Bytes, err error)
 //
-//    //Detached version has a separate MAC.
-//    func (b Bytes) SecretBoxDetached(n SecretBoxNonce, k SecretBoxKey) (c Bytes, mac SecretBoxMAC)
-//    func (b Bytes) SecretBoxOpenDetached(mac SecretBoxMAC, n SecretBoxNonce, k SecretBoxKey) (m Bytes, err error)
+// (XSalsa20-Poly1305)
 //
-//(XSalsa20-Poly1305)
+// # Authenticated Encryption with Additional Data
 //
-//Authenticated Encryption with Additional Data
+// Use a secret key and a nonce to protect the key, messages could be encrypted.
+// Optional additional data and the message is authenticited with an
+// authentication tag. Both intergrity and authenticity is checked when
+// decryption. The decryption would not be performed unless the authentication
+// tag is verified.
 //
-//Use a secret key and a nonce to protect the key, messages could be encrypted.
-//Optional additional data and the message is authenticited with an
-//authentication tag. Both intergrity and authenticity is checked when
-//decryption. The decryption would not be performed unless the authentication
-//tag is verified.
+//	func MakeAEADCPKey() AEADCPKey
+//	func (n *AEADCPNonce) Next()
 //
-//    func MakeAEADCPKey() AEADCPKey
-//    func (n *AEADCPNonce) Next()
+//	//encrypted message + MAC.
+//	func (b Bytes) AEADCPEncrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes)
+//	func (b Bytes) AEADCPDecrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err error)
+//	func (b Bytes) AEADCPVerify(ad Bytes, n AEADCPNonce, k AEADCPKey) (err error)
 //
-//    //encrypted message + MAC.
-//    func (b Bytes) AEADCPEncrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes)
-//    func (b Bytes) AEADCPDecrypt(ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err error)
-//    func (b Bytes) AEADCPVerify(ad Bytes, n AEADCPNonce, k AEADCPKey) (err error)
+//	//Detached version has a separate MAC.
+//	func (b Bytes) AEADCPEncryptDetached(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes, mac AEADCPMAC)
+//	func (b Bytes) AEADCPDecryptDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err error)
+//	func (b Bytes) AEADCPVerifyDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AEADCPKey) (err error)
 //
-//    //Detached version has a separate MAC.
-//    func (b Bytes) AEADCPEncryptDetached(ad Bytes, n AEADCPNonce, k AEADCPKey) (c Bytes, mac AEADCPMAC)
-//    func (b Bytes) AEADCPDecryptDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AEADCPKey) (m Bytes, err error)
-//    func (b Bytes) AEADCPVerifyDetached(mac AEADCPMAC, ad Bytes, n AEADCPNonce, k AEADCPKey) (err error)
+// AEADCP* (ChaCha20-Poly1305_IETF)
+// AEADXCP* (XChaCha20-Poly1305_IETF)
 //
-//AEADCP* (ChaCha20-Poly1305_IETF)
-//AEADXCP* (XChaCha20-Poly1305_IETF)
+// # Secret Key Streaming Encryption
 //
-//Secret Key Streaming Encryption
+// High-level streaming API that use AEAD construct. Using
+// `SecretStreamTag_Sync` to indicate the end of message. And this is
+// useful for application to parse the message earlier. Rekeying is
+// automatic. However using `SecretStreamTag_Rekey` explicitly ask for
+// rekeying. Typical usage is sending chunks with
+// `SecretStreamTag_Message`.
 //
-//High-level streaming API that use AEAD construct. Using
-//`SecretStreamTag_Sync` to indicate the end of message. And this is
-//useful for application to parse the message earlier. Rekeying is
-//automatic. However using `SecretStreamTag_Rekey` explicitly ask for
-//rekeying. Typical usage is sending chunks with
-//`SecretStreamTag_Message`.
+//	func MakeSecretStreamXCPKey() SecretStreamXCPKey
 //
-//     func MakeSecretStreamXCPKey() SecretStreamXCPKey
+//	//decoder
+//	func MakeSecretStreamXCPDecoder(key SecretStreamXCPKey, in io.Reader, header SecretStreamXCPHeader) (SecretStreamDecoder, error)
+//	func (e *SecretStreamXCPDecoder) Read(b []byte) (n int, err error)
+//	func (e *SecretStreamXCPDecoder) SetAdditionData(ad []byte)
+//	func (e SecretStreamXCPDecoder) Tag() SecretStreamTag
 //
-//     //decoder
-//     func MakeSecretStreamXCPDecoder(key SecretStreamXCPKey, in io.Reader, header SecretStreamXCPHeader) (SecretStreamDecoder, error)
-//     func (e *SecretStreamXCPDecoder) Read(b []byte) (n int, err error)
-//     func (e *SecretStreamXCPDecoder) SetAdditionData(ad []byte)
-//     func (e SecretStreamXCPDecoder) Tag() SecretStreamTag
+//	//encoder
+//	func MakeSecretStreamXCPEncoder(key SecretStreamXCPKey, out io.Writer) SecretStreamEncoder
+//	func (e *SecretStreamXCPEncoder) Close() error
+//	func (e SecretStreamXCPEncoder) Header() SecretStreamXCPHeader
+//	func (e *SecretStreamXCPEncoder) SetAdditionData(ad []byte)
+//	func (e *SecretStreamXCPEncoder) SetTag(t SecretStreamTag)
+//	func (e *SecretStreamXCPEncoder) Write(b []byte) (n int, err error)
+//	func (e *SecretStreamXCPEncoder) WriteAndClose(b []byte) (n int, err error)
 //
-//     //encoder
-//     func MakeSecretStreamXCPEncoder(key SecretStreamXCPKey, out io.Writer) SecretStreamEncoder
-//     func (e *SecretStreamXCPEncoder) Close() error
-//     func (e SecretStreamXCPEncoder) Header() SecretStreamXCPHeader
-//     func (e *SecretStreamXCPEncoder) SetAdditionData(ad []byte)
-//     func (e *SecretStreamXCPEncoder) SetTag(t SecretStreamTag)
-//     func (e *SecretStreamXCPEncoder) Write(b []byte) (n int, err error)
-//     func (e *SecretStreamXCPEncoder) WriteAndClose(b []byte) (n int, err error)
+// XCP (XChaCha20-Poly1305_IETF)
 //
-//XCP (XChaCha20-Poly1305_IETF)
+// # Key Derivation
 //
-//Key Derivation
+// Deriving subkeys from a single high-entropy key
 //
-//Deriving subkeys from a single high-entropy key
+//	func MakeMasterKey() MasterKey
+//	func MakeKeyContext(s string) KeyContext
+//	func (m MasterKey) Derive(length int, id uint64, context KeyContext) SubKey
 //
-//    func MakeMasterKey() MasterKey
-//    func MakeKeyContext(s string) KeyContext
-//    func (m MasterKey) Derive(length int, id uint64, context KeyContext) SubKey
-//KDF (BLAKE2B)
+// KDF (BLAKE2B)
 package sodium
 
 import (
@@ -211,29 +211,29 @@ import (
 )
 
 var (
-	ErrAuth        = errors.New("sodium: Message forged")
-	ErrOpenBox     = errors.New("sodium: Can't open box")
-	ErrOpenSign    = errors.New("sodium: Signature forged")
-	ErrDecryptAEAD = errors.New("sodium: Can't decrypt message")
-	ErrPassword    = errors.New("sodium: Password not matched")
-	ErrInvalidKey  = errors.New("sodium: Invalid key")
-	ErrInvalidHeader  = errors.New("sodium: Invalid header")
-	ErrDecryptSS  = errors.New("sodium: Can't decrypt stream")
+	ErrAuth          = errors.New("sodium: Message forged")
+	ErrOpenBox       = errors.New("sodium: Can't open box")
+	ErrOpenSign      = errors.New("sodium: Signature forged")
+	ErrDecryptAEAD   = errors.New("sodium: Can't decrypt message")
+	ErrPassword      = errors.New("sodium: Password not matched")
+	ErrInvalidKey    = errors.New("sodium: Invalid key")
+	ErrInvalidHeader = errors.New("sodium: Invalid header")
+	ErrDecryptSS     = errors.New("sodium: Can't decrypt stream")
 	ErrInvalidState  = errors.New("sodium: Invalid state")
-	ErrUnknown = errors.New("sodium: Unknown")
+	ErrUnknown       = errors.New("sodium: Unknown")
 )
 
-//Typed has pre-defined size.
+// Typed has pre-defined size.
 type Typed interface {
 	Size() int // Size returns the pre-defined size of the object.
 	Length() int
 	setBytes(Bytes)
 }
 
-//Bytes warppers around []byte.
+// Bytes warppers around []byte.
 type Bytes []byte
 
-//Length returns the byte length.
+// Length returns the byte length.
 func (b Bytes) Length() int {
 	return len(b)
 }
@@ -250,13 +250,13 @@ func plen(b []byte) (unsafe.Pointer, int) {
 	}
 }
 
-//Nonce is used to protect secret key. It is important to not use the same nonce for a given key.
+// Nonce is used to protect secret key. It is important to not use the same nonce for a given key.
 type Nonce interface {
 	Typed
 	Next() //Next unused nonce
 }
 
-//Randomize fill the Typed with random bytes.
+// Randomize fill the Typed with random bytes.
 func Randomize(k Typed) {
 	b := make([]byte, k.Size())
 	if _, err := rand.Read(b); err != nil {

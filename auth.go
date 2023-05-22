@@ -18,7 +18,7 @@ func (b MACKey) Size() int {
 	return cryptoAuthKeyBytes
 }
 
-//MAC stores Message Authentication Code produced by HMAC-SHA512256.
+// MAC stores Message Authentication Code produced by HMAC-SHA512256.
 type MAC struct {
 	Bytes
 }
@@ -27,7 +27,7 @@ func (b MAC) Size() int {
 	return cryptoAuthBytes
 }
 
-//Auth generates a MAC for the message with the secret 'key'.
+// Auth generates a MAC for the message with the secret 'key'.
 func (b Bytes) Auth(key MACKey) (mac MAC) {
 	checkTypedSize(&key, "Secret Key")
 	o := make([]byte, cryptoAuthBytes)
@@ -45,9 +45,9 @@ func (b Bytes) Auth(key MACKey) (mac MAC) {
 	return
 }
 
-//AuthVerify verifies a messagee with MAC and the secret 'key'.
+// AuthVerify verifies a messagee with MAC and the secret 'key'.
 //
-//It returns an error if verification failed.
+// It returns an error if verification failed.
 func (b Bytes) AuthVerify(mac MAC, key MACKey) (err error) {
 	checkTypedSize(&key, "Secret Key")
 	checkTypedSize(&mac, "MAC")

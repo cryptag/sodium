@@ -26,10 +26,10 @@ func (s ShortHashKey) Size() int {
 	return cryptoShortHashKeyBytes
 }
 
-//Shorthash use a secret key and input to produce a ShortHash.
-//It is protective to short input. And it's output is also too short to
-//be collision-resistent, however it can be used in hash table, Bloom filter
-//or generate MAC for interactive protocol.
+// Shorthash use a secret key and input to produce a ShortHash.
+// It is protective to short input. And it's output is also too short to
+// be collision-resistent, however it can be used in hash table, Bloom filter
+// or generate MAC for interactive protocol.
 func (b Bytes) Shorthash(key ShortHashKey) (out Bytes) {
 	checkTypedSize(&key, "key")
 

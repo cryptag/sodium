@@ -18,7 +18,7 @@ func (s Scalar) Size() int {
 	return cryptoScalarmultScalarBytes
 }
 
-//ScalarMult is the mulitiplication of two Scalar, used to calculate shared key
+// ScalarMult is the mulitiplication of two Scalar, used to calculate shared key
 // from BoxSecertKey and other end's BoxPublicKey.
 type ScalarMult struct {
 	Bytes
@@ -28,7 +28,7 @@ func (s ScalarMult) Size() int {
 	return cryptoScalarmultBytes
 }
 
-//CryptoScalarmultBase calculates BoxPublicKey 'q' from BoxSecertKey 'n'.
+// CryptoScalarmultBase calculates BoxPublicKey 'q' from BoxSecertKey 'n'.
 func CryptoScalarmultBase(n Scalar) (q Scalar) {
 	checkTypedSize(&n, "SecretKey")
 	qb := make([]byte, cryptoScalarmultScalarBytes)
@@ -42,8 +42,8 @@ func CryptoScalarmultBase(n Scalar) (q Scalar) {
 	return Scalar{qb}
 }
 
-//CryptoScalarmult calculates common key 'q' from private key 'n' and
-//other's public key 'p'
+// CryptoScalarmult calculates common key 'q' from private key 'n' and
+// other's public key 'p'
 func CryptoScalarmult(n, p Scalar) (q ScalarMult) {
 	checkTypedSize(&n, "SecretKey")
 	checkTypedSize(&p, "PublicKey")

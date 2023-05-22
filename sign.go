@@ -18,7 +18,7 @@ type SignKP struct {
 	SecretKey SignSecretKey
 }
 
-//MakeSignKP generates a keypair for signing
+// MakeSignKP generates a keypair for signing
 func MakeSignKP() SignKP {
 	pkb := make([]byte, cryptoSignPublicKeyBytes)
 	skb := make([]byte, cryptoSignSecretKeyBytes)
@@ -34,9 +34,9 @@ func MakeSignKP() SignKP {
 	}
 }
 
-//SeedSignKP generates a keypair for signing from a SignSeed.
+// SeedSignKP generates a keypair for signing from a SignSeed.
 //
-//The same pair of keys will be generated with the same 'seed'
+// The same pair of keys will be generated with the same 'seed'
 func SeedSignKP(seed SignSeed) SignKP {
 	checkTypedSize(&seed, "seed")
 	pkb := make([]byte, cryptoSignPublicKeyBytes)
@@ -54,7 +54,7 @@ func SeedSignKP(seed SignSeed) SignKP {
 	}
 }
 
-//ToBox converts a signing secret key into a box secret key - ed25519 to curve25519 - returns BoxSecretKey.
+// ToBox converts a signing secret key into a box secret key - ed25519 to curve25519 - returns BoxSecretKey.
 func (k SignSecretKey) ToBox() BoxSecretKey {
 	checkTypedSize(&k, "Sign SecretKey")
 	skb := make([]byte, cryptoBoxSecretKeyBytes)
@@ -64,7 +64,7 @@ func (k SignSecretKey) ToBox() BoxSecretKey {
 	return BoxSecretKey{skb}
 }
 
-//ToBox converts a signing public key into a box public key - ed25519 to curve25519 - returns BoxPublicKey.
+// ToBox converts a signing public key into a box public key - ed25519 to curve25519 - returns BoxPublicKey.
 func (k SignPublicKey) ToBox() BoxPublicKey {
 	checkTypedSize(&k, "Sign PublicKey")
 	pkb := make([]byte, cryptoBoxPublicKeyBytes)
@@ -74,7 +74,7 @@ func (k SignPublicKey) ToBox() BoxPublicKey {
 	return BoxPublicKey{pkb}
 }
 
-//ToBox converts a pair of signing key into a pair of box key - ed25519 to curve25519 - returns BoxKP.
+// ToBox converts a pair of signing key into a pair of box key - ed25519 to curve25519 - returns BoxKP.
 func (p SignKP) ToBox() BoxKP {
 	return BoxKP{
 		p.PublicKey.ToBox(),
@@ -98,7 +98,7 @@ func (k SignSecretKey) Size() int {
 	return cryptoSignSecretKeyBytes
 }
 
-//Seed extracts the seed used when generating the key pair.
+// Seed extracts the seed used when generating the key pair.
 func (k SignSecretKey) Seed() SignSeed {
 	checkTypedSize(&k, "Sign SecretKey")
 	sb := make([]byte, cryptoSignSeedBytes)
@@ -108,7 +108,7 @@ func (k SignSecretKey) Seed() SignSeed {
 	return SignSeed{sb}
 }
 
-//PublicKey extracts the SignPublicKey from the SignSecretKey.
+// PublicKey extracts the SignPublicKey from the SignSecretKey.
 func (k SignSecretKey) PublicKey() SignPublicKey {
 	checkTypedSize(&k, "Sign SecretKey")
 	pkb := make([]byte, cryptoSignPublicKeyBytes)
@@ -134,7 +134,7 @@ func (b Signature) Size() int {
 	return cryptoSignBytes
 }
 
-//Sign returns 'sm': signature+message
+// Sign returns 'sm': signature+message
 func (b Bytes) Sign(key SignSecretKey) (sm Bytes) {
 	checkTypedSize(&key, "Sign SecretKey")
 	bp, bl := plen(b)
@@ -154,7 +154,7 @@ func (b Bytes) Sign(key SignSecretKey) (sm Bytes) {
 	return
 }
 
-//SignDetached signs the message with 'key' and returns only the signature.
+// SignDetached signs the message with 'key' and returns only the signature.
 func (b Bytes) SignDetached(key SignSecretKey) (sig Signature) {
 	checkTypedSize(&key, "Sign SecretKey")
 	sigb := make([]byte, cryptoSignBytes)
@@ -174,9 +174,9 @@ func (b Bytes) SignDetached(key SignSecretKey) (sig Signature) {
 	return
 }
 
-//SignVerifyDetached verifies the message and its detached 'sig' with 'key'.
+// SignVerifyDetached verifies the message and its detached 'sig' with 'key'.
 //
-//It returns an error if verification failed.
+// It returns an error if verification failed.
 func (b Bytes) SignVerifyDetached(sig Signature, key SignPublicKey) (err error) {
 	checkTypedSize(&sig, "Signature")
 	checkTypedSize(&key, "Sign PublicKey")
@@ -191,9 +191,9 @@ func (b Bytes) SignVerifyDetached(sig Signature, key SignPublicKey) (err error) 
 	return
 }
 
-//SignOpen returns message 'm' from signature+message, verified by 'key'.
+// SignOpen returns message 'm' from signature+message, verified by 'key'.
 //
-//It returns an error if verification failed.
+// It returns an error if verification failed.
 func (b Bytes) SignOpen(key SignPublicKey) (m Bytes, err error) {
 	checkTypedSize(&key, "Sign PublicKey")
 	bp, bl := plen(b)

@@ -28,7 +28,7 @@ type AEADXCPKey struct {
 }
 
 func MakeAEADXCPKey() AEADXCPKey {
-	b := make([]byte, cryptoAEADXChaCha20Poly1305IETFKeyBytes);
+	b := make([]byte, cryptoAEADXChaCha20Poly1305IETFKeyBytes)
 	C.crypto_aead_xchacha20poly1305_ietf_keygen((*C.uchar)(&b[0]))
 	return AEADXCPKey{b}
 }
@@ -45,9 +45,9 @@ func (AEADXCPMAC) Size() int {
 	return cryptoAEADXChaCha20Poly1305IETFABytes
 }
 
-//AEADXCPEncrypt encrypts message with AEADXCPKey, and AEADXCPNonce.
-//Message then authenticated with additional data 'ad'.
-//Authentication tag is append to the encrypted data.
+// AEADXCPEncrypt encrypts message with AEADXCPKey, and AEADXCPNonce.
+// Message then authenticated with additional data 'ad'.
+// Authentication tag is append to the encrypted data.
 func (b Bytes) AEADXCPEncrypt(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (c Bytes) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -77,10 +77,10 @@ func (b Bytes) AEADXCPEncrypt(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (c Bytes) 
 	return
 }
 
-//AEADXCPDecrypt decrypts message with AEADXCPKey, and AEADXCPNonce.
-//The appended authenticated tag is verified with additional data 'ad' before decryption.
+// AEADXCPDecrypt decrypts message with AEADXCPKey, and AEADXCPNonce.
+// The appended authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADXCPDecrypt(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (m Bytes, err error) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -107,9 +107,9 @@ func (b Bytes) AEADXCPDecrypt(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (m Bytes, 
 	return
 }
 
-//AEADXCPEncryptDetached encrypts message with AEADXCPKey, and AEADXCPNonce.
-//Message then authenticated with additional data 'ad'.
-//Authentication tag is separated saved as 'mac'.
+// AEADXCPEncryptDetached encrypts message with AEADXCPKey, and AEADXCPNonce.
+// Message then authenticated with additional data 'ad'.
+// Authentication tag is separated saved as 'mac'.
 func (b Bytes) AEADXCPEncryptDetached(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (c Bytes, mac AEADXCPMAC) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -140,10 +140,10 @@ func (b Bytes) AEADXCPEncryptDetached(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (c
 	return
 }
 
-//AEADXCPDecryptDetached decrypts message with AEADXCPKey, and AEADXCPNonce.
-//The separated authenticated tag is verified with additional data 'ad' before decryption.
+// AEADXCPDecryptDetached decrypts message with AEADXCPKey, and AEADXCPNonce.
+// The separated authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADXCPDecryptDetached(mac AEADXCPMAC, ad Bytes, n AEADXCPNonce, k AEADXCPKey) (m Bytes, err error) {
 	checkTypedSize(&mac, "public mac")
 	checkTypedSize(&n, "public nonce")
@@ -168,10 +168,10 @@ func (b Bytes) AEADXCPDecryptDetached(mac AEADXCPMAC, ad Bytes, n AEADXCPNonce, 
 	return
 }
 
-//AEADXCPVerify decrypts message with AEADXCPKey, and AEADXCPNonce without writing decrypted data.
-//The appended authenticated tag is verified with additional data 'ad' before decryption.
+// AEADXCPVerify decrypts message with AEADXCPKey, and AEADXCPNonce without writing decrypted data.
+// The appended authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADXCPVerify(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (err error) {
 	checkTypedSize(&n, "public nonce")
 	checkTypedSize(&k, "secret key")
@@ -194,10 +194,10 @@ func (b Bytes) AEADXCPVerify(ad Bytes, n AEADXCPNonce, k AEADXCPKey) (err error)
 	return
 }
 
-//AEADXCPVerifyDetached decrypts message with AEADXCPKey, and AEADXCPNonce without writing decrypted data.
-//The separated authenticated tag is verified with additional data 'ad' before decryption.
+// AEADXCPVerifyDetached decrypts message with AEADXCPKey, and AEADXCPNonce without writing decrypted data.
+// The separated authenticated tag is verified with additional data 'ad' before decryption.
 //
-//It returns an error if decryption failed.
+// It returns an error if decryption failed.
 func (b Bytes) AEADXCPVerifyDetached(mac AEADXCPMAC, ad Bytes, n AEADXCPNonce, k AEADXCPKey) (err error) {
 	checkTypedSize(&mac, "public mac")
 	checkTypedSize(&n, "public nonce")
