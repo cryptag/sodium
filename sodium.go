@@ -167,7 +167,7 @@
 // # Secret Key Streaming Encryption
 //
 // High-level streaming API that use AEAD construct. Using
-// `SecretStreamTag_Sync` to indicate the end of message. And this is
+// `SecretStreamTag_Final` to indicate the end of message. And this is
 // useful for application to parse the message earlier. Rekeying is
 // automatic. However using `SecretStreamTag_Rekey` explicitly ask for
 // rekeying. Typical usage is sending chunks with

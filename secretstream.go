@@ -21,17 +21,22 @@ const (
 	// normal message chunk
 	SecretStreamTag_Message = iota
 	// message boundary, the last chunk of message
-	SecretStreamTag_Sync
+	SecretStreamTag_Final
 	// more messages will follow; this is not the last message
 	SecretStreamTag_Push
 	// explicity rekeying
 	SecretStreamTag_Rekey
+
+	// Calling it `SecretStreamTag_Final` more closely matches
+	// https://github.com/jedisct1/libsodium-doc/blob/master/secret-key_cryptography/secretstream.md
+	// but adding this for backward compatibility
+	SecretStreamTag_Sync = SecretStreamTag_Final
 )
 
 func (tag *SecretStreamTag) fromCtag(ctag C.uchar) {
 	switch ctag {
 	case C.crypto_secretstream_xchacha20poly1305_tag_final():
-		*tag = SecretStreamTag_Sync
+		*tag = SecretStreamTag_Final
 	case C.crypto_secretstream_xchacha20poly1305_tag_push():
 		*tag = SecretStreamTag_Push
 	case C.crypto_secretstream_xchacha20poly1305_tag_rekey():
@@ -44,7 +49,7 @@ func (tag *SecretStreamTag) fromCtag(ctag C.uchar) {
 
 func (tag SecretStreamTag) toCtag() (ctag C.uchar) {
 	switch tag {
-	case SecretStreamTag_Sync:
+	case SecretStreamTag_Final:
 		ctag = C.crypto_secretstream_xchacha20poly1305_tag_final()
 	case SecretStreamTag_Push:
 		ctag = C.crypto_secretstream_xchacha20poly1305_tag_push()

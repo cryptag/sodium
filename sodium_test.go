@@ -438,7 +438,7 @@ func ExampleSecretStreamXCPEncoder_Write() {
 	key := MakeSecretStreamXCPKey()
 	var buf bytes.Buffer
 	encoder := MakeSecretStreamXCPEncoder(key, &buf)
-	encoder.SetTag(SecretStreamTag_Sync)
+	encoder.SetTag(SecretStreamTag_Final)
 	encoder.Write([]byte("test"))
 	encoder.Close()
 	fmt.Println(buf.Len())
@@ -449,7 +449,7 @@ func ExampleSecretStreamXCPEncoder_WriteAndClose() {
 	key := MakeSecretStreamXCPKey()
 	var buf bytes.Buffer
 	encoder := MakeSecretStreamXCPEncoder(key, &buf)
-	encoder.SetTag(SecretStreamTag_Sync)
+	encoder.SetTag(SecretStreamTag_Final)
 	encoder.WriteAndClose([]byte("test"))
 	fmt.Println(buf.Len())
 	//Output: 21
